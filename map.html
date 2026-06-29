@@ -257,9 +257,9 @@
         "吉林",
         "黑龙江",
       ],
-      eastChina: ["上海", "江苏", "浙江", "安徽", "台湾"],
+      eastChina: ["上海", "江苏", "浙江", "安徽", "台湾", "福建", "江西", "海南"],
       southChina: ["广东", "广西", "湖南", "湖北", "香港", "澳门"],
-      southwestChina: ["重庆", "四川", "云南", "贵州", "西藏"],
+      southwestChina: ["重庆", "四川", "云南", "贵州", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆"],
     }
 
     const regionCityNames = {
@@ -775,7 +775,7 @@
       })
     }
 
-    const cardOrder = ["北京", "上海", "重庆", "深圳", "新加坡"]
+    const cardOrder = ["北京", "深圳", "上海", "重庆", "新加坡"]
 
     function openHubUrl(cityName) {
       const url = cityCards[cityName]?.url
@@ -954,9 +954,7 @@
 
     async function loadProvinceData() {
       try {
-        const provinceResponse = await fetch(
-          "https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json"
-        )
+        const provinceResponse = await fetch("china-provinces.json")
         const chinaProvinces = await provinceResponse.json()
 
         provinceFeatures = (chinaProvinces.features || [])
