@@ -193,14 +193,7 @@
       line-height: 1;
     }
 
-    @media (min-width: 810px) and (max-width: 1180px) {
-      .stage {
-        --globe-size: min(520px, calc(100vw - var(--card-width) - var(--card-margin) - var(--card-gap)));
-        --card-width: clamp(330px, 38vw, 460px);
-      }
-    }
-
-    @media (max-width: 809px) {
+    @media (max-width: 1180px) {
       .stage {
         min-height: 100vh;
         --globe-size: min(420px, 64vw);
@@ -224,44 +217,6 @@
         transform: none;
       }
     }
-
-    @media (max-width: 640px) {
-      body {
-        align-items: stretch;
-      }
-
-      .stage {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: center;
-        height: 100vh;
-        height: 100svh;
-        min-height: 100vh;
-        padding: 20px;
-        --globe-size: calc(100vw - 40px);
-      }
-
-      canvas {
-        position: relative;
-        top: auto;
-        left: auto;
-        flex: 0 0 auto;
-        margin-bottom: 20px;
-        transform: none;
-      }
-
-      .card-column {
-        position: relative;
-        top: auto;
-        bottom: auto;
-        left: auto;
-        right: auto;
-        width: 100%;
-        max-height: calc(100vh - var(--globe-size) - 60px);
-        max-height: calc(100svh - var(--globe-size) - 60px);
-      }
-    }
   </style>
 </head>
 <body>
@@ -270,8 +225,8 @@
     <section class="card-column card-column--right" id="rightCardLayer" aria-live="polite"></section>
   </main>
 
-  <script src="d3.min.js"></script>
-  <script src="topojson-client.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 
   <script>
     const canvas = document.getElementById("globe")
@@ -302,9 +257,9 @@
         "吉林",
         "黑龙江",
       ],
-      eastChina: ["上海", "江苏", "浙江", "安徽", "台湾", "福建", "江西"],
-      southChina: ["广东", "广西", "湖南", "湖北", "海南", "香港", "澳门"],
-      southwestChina: ["重庆", "四川", "云南", "贵州", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆"],
+      eastChina: ["上海", "江苏", "浙江", "安徽", "台湾"],
+      southChina: ["广东", "广西", "湖南", "湖北", "香港", "澳门"],
+      southwestChina: ["重庆", "四川", "云南", "贵州", "西藏"],
     }
 
     const regionCityNames = {
@@ -575,11 +530,6 @@
       context.save()
       context.beginPath()
       path(chinaFeature)
-      provinceFeatures
-        .filter((feature) => getProvinceName(feature) === "台湾")
-        .forEach((feature) => {
-          if (isRenderableFeature(feature)) path(feature)
-        })
       context.clip()
 
       activeRegionNames.forEach((regionName) => {
@@ -825,7 +775,7 @@
       })
     }
 
-    const cardOrder = ["北京", "上海", "深圳", "重庆", "新加坡"]
+    const cardOrder = ["北京", "上海", "重庆", "深圳", "新加坡"]
 
     function openHubUrl(cityName) {
       const url = cityCards[cityName]?.url
@@ -966,7 +916,7 @@
     async function loadWorldData() {
       try {
         const worldResponse = await fetch(
-          "countries-110m.json"
+          "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"
         )
         const world = await worldResponse.json()
 
@@ -1004,7 +954,9 @@
 
     async function loadProvinceData() {
       try {
-        const provinceResponse = await fetch("china-provinces.json")
+        const provinceResponse = await fetch(
+          "https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json"
+        )
         const chinaProvinces = await provinceResponse.json()
 
         provinceFeatures = (chinaProvinces.features || [])
