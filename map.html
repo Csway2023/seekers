@@ -193,7 +193,14 @@
       line-height: 1;
     }
 
-    @media (max-width: 1180px) {
+    @media (min-width: 810px) and (max-width: 1180px) {
+      .stage {
+        --globe-size: min(520px, calc(100vw - var(--card-width) - var(--card-margin) - var(--card-gap)));
+        --card-width: clamp(330px, 38vw, 460px);
+      }
+    }
+
+    @media (max-width: 809px) {
       .stage {
         min-height: 100vh;
         --globe-size: min(420px, 64vw);
@@ -215,6 +222,44 @@
         max-height: 48vh;
         overflow: auto;
         transform: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        align-items: stretch;
+      }
+
+      .stage {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100vh;
+        height: 100svh;
+        min-height: 100vh;
+        padding: 20px;
+        --globe-size: calc(100vw - 40px);
+      }
+
+      canvas {
+        position: relative;
+        top: auto;
+        left: auto;
+        flex: 0 0 auto;
+        margin-bottom: 20px;
+        transform: none;
+      }
+
+      .card-column {
+        position: relative;
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        width: 100%;
+        max-height: calc(100vh - var(--globe-size) - 60px);
+        max-height: calc(100svh - var(--globe-size) - 60px);
       }
     }
   </style>
@@ -257,8 +302,8 @@
         "吉林",
         "黑龙江",
       ],
-      eastChina: ["上海", "江苏", "浙江", "安徽", "台湾", "福建", "江西", "海南"],
-      southChina: ["广东", "广西", "湖南", "湖北", "香港", "澳门"],
+      eastChina: ["上海", "江苏", "浙江", "安徽", "台湾", "福建", "江西"],
+      southChina: ["广东", "广西", "湖南", "湖北", "海南", "香港", "澳门"],
       southwestChina: ["重庆", "四川", "云南", "贵州", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆"],
     }
 
@@ -530,6 +575,11 @@
       context.save()
       context.beginPath()
       path(chinaFeature)
+      provinceFeatures
+        .filter((feature) => getProvinceName(feature) === "台湾")
+        .forEach((feature) => {
+          if (isRenderableFeature(feature)) path(feature)
+        })
       context.clip()
 
       activeRegionNames.forEach((regionName) => {
@@ -775,7 +825,7 @@
       })
     }
 
-    const cardOrder = ["北京", "深圳", "上海", "重庆", "新加坡"]
+    const cardOrder = ["北京", "上海", "深圳", "重庆", "新加坡"]
 
     function openHubUrl(cityName) {
       const url = cityCards[cityName]?.url
